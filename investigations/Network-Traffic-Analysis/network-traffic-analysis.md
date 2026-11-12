@@ -73,14 +73,21 @@ All times are WCAST (UTC+1), 11 November 2026.
 
 ![PCAP Capture Integrity](../../Screenshots/PCAP-Integerity.png)
 
+Screenshot showing capture start and end timestamps
+
 ![Protocol Breakdown](../../Screenshots/protocol-breakdown.png)
+
+Protocol breakdown
 
 ![IPv4 Network Conversations](../../Screenshots/IPV4-Network-Convo.png)
 
+Conversations dialog highlighting communication volume and packet counts between DC1, the Mythic C2 server, and Splunk.
+
 ![Mythic C2 HTTP Response](../../Screenshots/mythicC2-HTTPresponse.png)
 
-## Operational Impact
+Detailed packet inspection of a decoded HTTP POST request and response stream between DC1 and the Mythic C2 server.
 
-Identified suspicious internal RDP and HTTP C2-like communication and documented packet-level evidence to support further investigation and incident response.
+## Operational Impact
+Identified 596 suspected C2 requests and 249 RDP packets involving Kali and DC1, providing quantified evidence to support threat assessment, prioritise investigation and inform incident response; separately documented 57,227 packets of DC1–Splunk traffic to support network activity validation.
 
 **Investigation Limitation:** Multiple-port scanning, successful RDP authentication, endpoint execution and account compromise were not independently established; executable transfers occurred before the PCAP capture window.
