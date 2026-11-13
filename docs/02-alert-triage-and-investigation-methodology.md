@@ -31,6 +31,7 @@ This methodology defines a consistent process for reviewing security alerts, inv
 | Sysmon | Examine process execution, network connections and system changes |
 | Linux authentication logs | Investigate SSH and other authentication activity |
 | SIEM alerts | Review detection details, timestamps and affected assets |
+| Wireshark / PCAP | Analyse network flows, packet details, protocols and suspicious communications |
 | Threat intelligence | Enrich indicators and assess known malicious activity |
 | Endpoint telemetry | Examine suspicious activity and verify response actions |
 
