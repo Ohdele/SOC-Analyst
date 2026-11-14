@@ -77,4 +77,4 @@ Full architecture and telemetry flow: [docs/03-soc-architecture-and-telemetry-fl
 
 ## Tools
 
-Elastic Stack · Splunk Enterprise · Wazuh · Elastic Agent · LimaCharlie · Tines · n8n · Sysmon · Windows Server · Linux · Active Directory · PowerShell · Python · MITRE ATT&CK · AbuseIPDB · VirusTotal · GreyNoise · Markdown · Mermaid
+Splunk Enterprise · LimaCharlie · Tines · n8n · Sysmon · Windows Server · Linux · Active Directory · PowerShell · Python · MITRE ATT&CK · AbuseIPDB · VirusTotal · GreyNoise · Markdown · Mermaid · Draw.io · VSCode
