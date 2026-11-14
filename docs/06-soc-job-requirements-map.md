@@ -7,7 +7,7 @@ This project was built by reverse-engineering entry-level SOC Analyst job descri
 | "Monitor security alerts across SIEM and endpoint security platforms" | [SOC Architecture & Telemetry Flow](03-soc-architecture-and-telemetry-flow.md) and investigation records |
 | "Triage alerts and investigate suspicious activity" | [Alert Triage & Investigation Methodology](02-alert-triage-and-investigation-methodology.md) and [Investigation Register](../investigations/investigation-register.md) |
 | "Analyse Windows and Linux security logs" | Investigation records and SIEM lab evidence |
-| “Correlate security events and identify indicators of compromise” | Investigate escalated alerts using [SIEM](../investigations/investigation-register.md#siem-investigation), EDR, [Network Flow & Packet](../investigations/investigation-register.md#i-09--network-flow-and-packet-analysis), firewall, authentication, proxy and host data |
+| “Correlate security events and identify indicators of compromise” | Investigate escalated alerts using [SIEM](../investigations/investigation-register.md#i-10--siem-investigation), EDR, [Network Flow & Packet](../investigations/investigation-register.md#i-09--network-flow-and-packet-analysis), firewall, authentication, proxy and host data |
 | "Perform incident containment and remediation" | [Incident Response & Remediation](04-incident-response-and-remediation.md) |
 | "Use threat intelligence and MITRE ATT&CK to investigate threats" | Investigation records and detection analysis |
 | "Document incidents and preserve investigation evidence" | [Investigation Register](../investigations/investigation-register.md) and [Screenshots](../Screenshots/) |
@@ -15,7 +15,4 @@ This project was built by reverse-engineering entry-level SOC Analyst job descri
 | "Automate security operations and response workflows" | Splunk, n8n, LimaCharlie and Tines implementation evidence |
 | "Communicate security findings and incident status" | [SOC Executive Summary](05-soc-executive-summary.md) |
 | "Maintain clear technical documentation" | This repository and its supporting documentation |
-
-
-
 
