@@ -15,6 +15,7 @@
 | I-07 | File integrity monitoring alert | Wazuh | To be assessed | To be documented | To be documented |
 | I-08 | Controlled endpoint isolation and recovery | LimaCharlie / Tines | To be assessed | To be documented | To be documented |
 | I-09 | Network flow and packet analysis | Wireshark PCAP | 🔴 High | Investigation completed; further validation required | Identified 596 suspected C2 HTTP POST requests and 249 RDP packets; endpoint execution, successful RDP authentication and account compromise remain unverified. |
+| I-10 | SIEM investigation of suspicious activity | Splunk | 🔴 High | Investigation completed | Confirmed successful Administrator logons, Apollo payload execution, HTTP-based C2 activity and simulated file exfiltration. |
 
 ## Investigation Details
 
@@ -35,14 +36,14 @@
 
 | | |
 |---|---|
-| **Asset** | Windows endpoint |
-| **Detection** | Successful logon following repeated failures |
-| **Telemetry** | Windows Event IDs 4625 and 4624 |
-| **Investigation** | Correlate failed attempts with the successful JSmith logon from `192.168.56.101`. |
-| **Findings** | To be documented. |
-| **Response** | Document verified response actions. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
+| **Asset** | DC1 |
+| **Detection** | Successful Administrator logons following repeated failures |
+| **Telemetry** | Splunk Windows Security Events 4624, 4672 and 4634 |
+| **Investigation** | Correlated three successful network logons from Kali using Logon IDs and timestamps. |
+| **Findings** | Confirmed three NTLMv2 Administrator logons: 7 Nov (16:36:19), 10 Nov (10:12:29) and 10 Nov (22:57:17), each linked to privilege assignment and logoff events. |
+| **Response** | Documented authentication evidence; no containment action confirmed. |
+| **Outcome** | Confirmed three successful Administrator sessions from Kali; full compromise duration not established. |
+| **MITRE ATT&CK Mapping** | T1078 – Valid Accounts. |
 
 ### I-03 · SSH Brute-Force Activity
 
@@ -61,27 +62,27 @@
 
 | | |
 |---|---|
-| **Asset** | Windows endpoint |
-| **Detection** | Elastic SIEM RDP brute-force alert |
-| **Telemetry** | Windows authentication logs |
-| **Investigation** | Analyse repeated RDP authentication failures. |
-| **Findings** | To be documented. |
-| **Response** | Document verified response actions. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
+| **Asset** | DC1 |
+| **Detection** | Repeated failed network logons from Kali |
+| **Telemetry** | Splunk Windows Security Event ID 4625 |
+| **Investigation** | Analysed failed logons from Kali, identifying targeted accounts and activity timeframe. |
+| **Findings** | Identified 62 failed logons: 60 targeting Administrator and 2 targeting root, between 7 Nov 2026, 16:35:38 to 10 Nov 2026, 22:57:15 |
+| **Response** | Documented authentication evidence; no containment action confirmed. |
+| **Outcome** | Confirmed repeated failed authentication attempts against DC1; successful access is documented separately in I-02. |
+| **MITRE ATT&CK Mapping** | T1110 – Brute Force. |
 
 ### I-05 · Mythic Command-and-Control Activity
 
 | | |
 |---|---|
-| **Asset** | Lab endpoint |
-| **Detection** | Elastic SIEM Mythic C2 detection |
-| **Telemetry** | Endpoint and network telemetry |
-| **Investigation** | Correlate telemetry and analyse indicators of compromise. |
-| **Findings** | To be documented. |
-| **Response** | Document verified response actions. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
+| **Asset** | DC1 (192.168.56.110), Mythic C2 (192.168.56.111) |
+| **Detection** | Suspicious Apollo payload execution and outbound C2 communications |
+| **Telemetry** | Splunk Sysmon Events 1 and 3; Windows Security Event ID 4688 |
+| **Investigation** | Correlated Apollo process execution with outbound network connections to the known Mythic server. |
+| **Findings** | Confirmed Apollo execution via PowerShell on 8 Nov 2026 at 21:18:38, followed by three TCP connections to Mythic over port 80 (21:18:40, 21:59:56 and 22:02:43). |
+| **Response** | Documented C2 activity and simulated exfiltration evidence; no containment action confirmed. |
+| **Outcome** | Confirmed Mythic C2 activity and simulated retrieval of a 167-byte `passwords.txt` artifact (10 Nov 2026, Task T-3). |
+| **MITRE ATT&CK Mapping** | T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
 
 ### I-06 · EICAR Malware Detection and Quarantine
 
@@ -127,11 +128,24 @@
 | | |
 |---|---|
 | **Asset** | DC1 (`192.168.56.110`), Kali (`192.168.56.101`), Mythic C2 (`192.168.56.111`) and Splunk (`192.168.56.130`) |
-| **Detection** | Suspected internal-to-internal port-scanning activity investigated through Wireshark packet analysis |
+| **Detection** | Suspected internal-to-internal port-scanning activity investigated through Wireshark |
 | **Telemetry** | Wireshark PCAP, TCP/HTTP traffic and network conversations |
 | **Severity** | 🔴 High |
-| **Investigation** | Analysed traffic captured on 2026-11-11 between 01:00:00 and 09:47:03 WCAST (UTC+1), examining connection patterns, source and destination systems and potential scanning activity. |
-| **Findings** | Identified 596 HTTP POST requests to `/data` between DC1 and Mythic C2 and 249 RDP packets from Kali to DC1; port scanning, successful RDP authentication and endpoint execution remained unconfirmed. |
-| **Response** | Recommend endpoint investigation, authentication-log correlation, executable validation and review of RDP access restrictions. |
-| **Outcome** | Investigation completed; suspicious internal communications documented. Port-scanning activity was not established. Further endpoint and authentication-log validation required. |
+| **Investigation** | Analysed traffic captured on 11 Nov 2026, 01:00–09:47 WCAST (UTC+1), examining RDP activity, TCP connections, HTTP communications and network conversations. |
+| **Findings** | Identified 249 RDP packets from Kali to DC1 and 596 HTTP POST `/data` requests from DC1 to Mythic C2 at 10–12-second intervals. Confirmed TCP handshakes to Mythic on port 80 at 01:26:21, 02:02:19 and 03:09:27. DC1–Mythic exchanged approximately 6 MB; DC1–Splunk exchanged approximately 33 MB. Port scanning was not established. |
+| **Response** | Recommended endpoint and authentication-log correlation and investigation of suspicious internal communications. |
+| **Outcome** | Confirmed suspicious RDP and HTTP C2 network activity; successful RDP authentication and endpoint execution required separate SIEM validation. |
 | **MITRE ATT&CK Mapping** | T1071.001 – Web Protocols; T1021.001 – Remote Desktop Protocol. |
+
+### I-10 · SIEM Investigation
+
+| | |
+|---|---|
+| **Asset** | DC1 |
+| **Detection** | RDP brute-force and Mythic Apollo C2 activity |
+| **Telemetry** | Splunk Windows Security, Sysmon and System Events |
+| **Investigation** | Correlated authentication, process execution and network events to reconstruct attack activity. |
+| **Findings** | Confirmed 62 failed logons (7–10 Nov); three successful Administrator logons (7 Nov 16:36:19; 10 Nov 10:12:29 and 22:57:17); Apollo execution (8 Nov 21:18:38); discovery commands (`whoami` at 21:48:45 and `ipconfig` at 21:49:33); C2 connections to Mythic (8 Nov 21:18:40, 21:59:56 and 22:02:43); simulated exfiltration of `passwords.txt` (10 Nov 23:52:28; Mythic artifact: 167 bytes). |
+| **Response** | Documented investigation evidence; no containment action confirmed. |
+| **Outcome** | Confirmed successful Administrator access, Apollo execution, C2 activity and simulated file exfiltration; no suspicious persistence or lateral movement confirmed. |
+| **MITRE ATT&CK Mapping** | T1110.001 – Password Guessing; T1078 – Valid Accounts; T1059.001 – PowerShell; T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
