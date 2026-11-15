@@ -4,18 +4,18 @@
 
 ## Summary
 
-| ID | Investigation | Alert Source | Affected Asset | Assigned Analyst | Severity | Status | Outcome |
-|---|---|---|---|---|---|---|---|
-| I-01 | Windows failed logon activity | Splunk | DC1 (Primary Domain Controller) | Tier 1 SOC Analyst | To be assessed | To be documented | To be documented |
-| I-02 | Successful logon following repeated failures | Splunk | DC1 (Primary Domain Controller) | Tier 2 SOC Analyst | 🔴 High | Investigation completed | To be documented |
-| I-03 | SSH brute-force activity | Wazuh | To be confirmed | Tier 1 SOC Analyst | To be assessed | To be documented | To be documented |
-| I-04 | RDP brute-force activity | Splunk | DC1 (Primary Domain Controller) | Tier 1 SOC Analyst | 🔴 High | Investigation completed | To be documented |
-| I-05 | Mythic command-and-control activity | Splunk | DC1 (Primary Domain Controller) | Tier 2 SOC Analyst | 🔴 High | Investigation completed | To be documented |
-| I-06 | EICAR malware detection and quarantine | Elastic SIEM | To be confirmed | Tier 1 SOC Analyst | Not assessed | Not conducted | Not conducted |
-| I-07 | File integrity monitoring alert | Wazuh | To be confirmed | Tier 1 SOC Analyst | To be assessed | To be documented | To be documented |
-| I-08 | Controlled endpoint isolation and recovery | LimaCharlie / Tines | To be confirmed | Tier 2 SOC Analyst | To be assessed | To be documented | To be documented |
-| I-09 | Network flow and packet analysis | Wireshark PCAP | DC1 (Primary Domain Controller) | Tier 2 SOC Analyst | 🔴 High | Investigation completed | Identified 596 suspected C2 HTTP POST requests and 249 RDP packets; endpoint execution, successful RDP authentication and account compromise remain unverified. |
-| I-10 | SIEM investigation of suspicious activity | Splunk | DC1 (Primary Domain Controller) | Tier 2 SOC Analyst | 🔴 High | Investigation completed | Confirmed successful Administrator logons, Apollo payload execution, HTTP-based C2 activity and simulated file exfiltration. |
+| ID | Investigation | Severity | Disposition | Assigned Analyst |
+|---|---|---|---|---|
+| I-01 | Windows failed logon activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
+| I-02 | Successful logon following repeated failures | 🔴 High | True Positive | Tier 2 SOC Analyst |
+| I-03 | SSH brute-force activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
+| I-04 | RDP brute-force activity | 🔴 High | True Positive | Tier 1 SOC Analyst |
+| I-05 | Mythic command-and-control activity | 🔴 High | True Positive | Tier 2 SOC Analyst |
+| I-06 | EICAR malware detection and quarantine | Not assessed | Not conducted | Not assigned |
+| I-07 | File integrity monitoring alert | To be assessed | Pending investigation | Tier 1 SOC Analyst |
+| I-08 | Controlled endpoint isolation and recovery | To be assessed | Pending investigation | Tier 2 SOC Analyst |
+| I-09 | Network flow and packet analysis | 🔴 High | Inconclusive | Tier 2 SOC Analyst |
+| I-10 | SIEM investigation of suspicious activity | 🔴 High | True Positive | Tier 2 SOC Analyst |
 
 ## Investigation Details
 
@@ -130,7 +130,6 @@
 | **Asset** | DC1 |
 | **Detection** | Suspected internal-to-internal port-scanning activity investigated through Wireshark |
 | **Telemetry** | Wireshark PCAP, TCP/HTTP traffic and network conversations |
-| **Severity** | 🔴 High |
 | **Investigation** | Analysed traffic captured on 11 Nov 2026, 01:00–09:47 WCAST (UTC+1), examining RDP activity, TCP connections, HTTP communications and network conversations. |
 | **Findings** | Identified 249 RDP packets from Kali to DC1 and 596 HTTP POST `/data` requests from DC1 to Mythic C2 at 10–12-second intervals. Confirmed TCP handshakes to Mythic on port 80 at 01:26:21, 02:02:19 and 03:09:27. DC1–Mythic exchanged approximately 6 MB; DC1–Splunk exchanged approximately 33 MB. Port scanning was not established. |
 | **Response** | Recommended endpoint and authentication-log correlation and investigation of suspicious internal communications. |
