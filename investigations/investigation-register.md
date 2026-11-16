@@ -131,10 +131,10 @@
 | **Asset** | DC1 |
 | **Detection** | Suspected internal-to-internal port-scanning activity investigated through Wireshark |
 | **Telemetry** | Wireshark PCAP, TCP/HTTP traffic and network conversations |
-| **Investigation** | Analysed traffic captured on 11 Nov 2026, 01:00–09:47 WCAST (UTC+1), examining RDP activity, TCP connections, HTTP communications and network conversations. |
-| **Findings** | Identified 249 RDP packets from Kali to DC1 and 596 HTTP POST `/data` requests from DC1 to Mythic C2 at 10–12-second intervals. Confirmed TCP handshakes to Mythic on port 80 at 01:26:21, 02:02:19 and 03:09:27. DC1–Mythic exchanged approximately 6 MB; DC1–Splunk exchanged approximately 33 MB. Port scanning was not established. |
+| **Investigation** | Analysed traffic captured on 11 Nov 2026, 01:00–09:47 WCAST (UTC+1), examining `RDP` activity, `TCP` connections, `HTTP` communications and network conversations. |
+| **Findings** | Identified `249 RDP packets` from Kali to DC1 and 596 HTTP POST `/data` requests from DC1 to Mythic C2 at 10–12-second intervals. Confirmed `TCP handshakes` to Mythic on port 80 at 01:26:21, 02:02:19 and 03:09:27. `DC1–Mythic` exchanged approximately 6 MB; DC1–Splunk exchanged approximately 33 MB. Port scanning was not established. |
 | **Response** | Recommended endpoint and authentication-log correlation and investigation of suspicious internal communications. |
-| **Outcome** | Confirmed suspicious RDP and HTTP C2 network activity; successful RDP authentication and endpoint execution required separate SIEM validation. |
+| **Outcome** | Confirmed suspicious `RDP` and `HTTP` C2 network activity; successful RDP authentication and endpoint execution required separate SIEM validation. |
 | **MITRE ATT&CK Mapping** | T1071.001 – Web Protocols; T1021.001 – Remote Desktop Protocol. |
 
 ### I-10 · SIEM Investigation
@@ -145,7 +145,7 @@
 | **Detection** | RDP brute-force and Mythic Apollo C2 activity |
 | **Telemetry** | Splunk Windows Security, Sysmon and System Events |
 | **Investigation** | Correlated authentication, process execution and network events to reconstruct attack activity. |
-| **Findings** | Confirmed 62 failed logons (7–10 Nov); three successful Administrator logons (7 Nov 16:36:19; 10 Nov 10:12:29 and 22:57:17); Apollo execution (8 Nov 21:18:38); discovery commands (`whoami` at 21:48:45 and `ipconfig` at 21:49:33); C2 connections to Mythic (8 Nov 21:18:40, 21:59:56 and 22:02:43); simulated exfiltration of `passwords.txt` (10 Nov 23:52:28; Mythic artifact: 167 bytes). |
+| **Findings** | Confirmed 62 failed logons (7–10 Nov); three successful Administrator logons (7 Nov 16:36:19; 10 Nov 10:12:29 and 22:57:17); `Apollo execution` (8 Nov 21:18:38); discovery commands (`whoami` at 21:48:45 and `ipconfig` at 21:49:33); C2 connections to Mythic (8 Nov 21:18:40, 21:59:56 and 22:02:43); simulated exfiltration of `passwords.txt` (10 Nov 23:52:28; Mythic artifact: 167 bytes). |
 | **Response** | Documented investigation evidence; no containment action confirmed. |
 | **Outcome** | Confirmed successful Administrator access, Apollo execution, C2 activity and simulated file exfiltration; no suspicious persistence or lateral movement confirmed. |
 | **MITRE ATT&CK Mapping** | T1110.001 – Password Guessing; T1078 – Valid Accounts; T1059.001 – PowerShell; T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
@@ -155,11 +155,11 @@
 
 | | |
 |---|---|
-| **Asset** | DC1 (192.168.56.110), WS01 (192.168.56.102), DeleDFIR.local |
+| **Asset** | DC1, WS01, DeleDFIR.local |
 | **Detection** | Weak domain password controls, suspicious credential use and Kerberos service-account exposure |
 | **Telemetry** | Active Directory, Windows authentication, SMB, Kerberos, BloodHound and password-policy data |
-| **Investigation** | Validated domain-user authentication, assessed password policies, tested credentials through NetExec and SMB, reviewed AD identities and relationships with BloodHound, and investigated credential exposure and Kerberos service-account weaknesses. |
-| **Findings** | Identified weak password-policy settings and validated low-privileged domain credentials through SMB. BloodHound collection exposed a password stored in an AD user Description attribute. A Kerberoasting assessment recovered the weak password of an SPN-enabled service account. PSExec and SMBExec also demonstrated successful authenticated remote execution on WS01 with SYSTEM privileges. |
-| **Response** | Reset the exposed account password, cleared its AD Description attribute, and documented recommendations for stronger password policies, secure service-account credentials and least-privilege access. |
+| **Investigation** | Validated domain authentication, tested credentials via `NetExec/SMB`, mapped AD paths with `BloodHound` and analyzed Kerberos weaknesses |
+| **Findings** | Identified weak password policies, exposed credentials via `SMB` and AD Description attributes, recovered a service-account password via `Kerberoasting` and verified remote execution as SYSTEM on WS01. |
+| **Response** | Reset the exposed account password, cleared its `AD Description attribute`, and documented recommendations for stronger password policies, secure service-account credentials and least-privilege access. |
 | **Outcome** | Confirmed multiple domain credential weaknesses, validated their security impact and verified remediation of the exposed AD credential. |
-| **MITRE ATT&CK Mapping** | T1078.002 – Domain Accounts; T1110.002 – Password Cracking; T1552.001 – Credentials In Files; T1558.003 – Kerberoasting; T1021.002 – SMB/Windows Admin Shares. |
+| **MITRE ATT&CK Mapping** | `T1078.002` – Domain Accounts; `T1110.002` – Password Cracking; `T1552.001` – Credentials In Files; `T1558.003` – Kerberoasting; `T1021.002` – SMB/Windows Admin Shares. |
