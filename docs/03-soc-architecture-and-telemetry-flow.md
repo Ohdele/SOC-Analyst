@@ -2,6 +2,7 @@
 
 Understanding **where security events originate, how telemetry moves and where it is analysed** is the foundation of the SOC. Every investigation connects to a point in this architecture.
 
+
 ```mermaid
 flowchart LR
     subgraph ATTACK["Attack Infrastructure"]
@@ -60,6 +61,8 @@ This diagram depicts a hybrid SOC lab environment built around a local VirtualBo
 
 The environment uses a VirtualBox host-only network (`192.168.56.0/24`), while NAT networking provides internet access to the virtual machines. It contains Windows domain infrastructure, a Windows workstation, a Splunk SIEM server, a Kali Linux attack simulation machine and cloud-hosted EDR and SOAR platforms.
 
+The portfolio also incorporates a separate Active Directory lab, `DeleDFIR.local`, used for authentication, identity and credential-security investigations; it is documented as a supporting environment and is not part of the primary `SplunkSOC.local` SOC architecture.
+
 ---
 
 ### Component Breakdown
@@ -74,9 +77,17 @@ The environment uses a VirtualBox host-only network (`192.168.56.0/24`), while N
 
 #### 3. Cloud-Hosted EDR and SOAR Integrations
 * **LimaCharlie:** Cloud EDR platform receiving endpoint telemetry from the enrolled DC1 sensor and detecting controlled credential-access activity.
-* **Tines:** Cloud SOAR platform receiving forwarded LimaCharlie detections, requesting analyst approval for endpoint isolation, sending Slack and email notifications and executing approved isolation actions through LimaCharlie.
+* **Tines:** Cloud SOAR platform receiving forwarded LimaCharlie detections, requesting analyst approval for endpoint isolation, sending Slack and email notifications and executing approved isolation actions through 
+LimaCharlie.
 
-#### 4. Local Automation and Notification Integrations
+#### 4. Supporting Active Directory Lab — DeleDFIR.local
+
+- **DC1 (Windows Server 2022) — `192.168.56.110`:** Domain Controller hosting Active Directory and DNS for `DeleDFIR.local`.
+- **WS01 (Windows 10) — `192.168.56.102`:** Domain-joined workstation used for domain authentication and access validation.
+- **Kali Linux:** Used for SMB authentication testing, Active Directory enumeration and Kerberoasting analysis.
+- **Investigation Scope:** Domain authentication, password-policy assessment, credential exposure and remediation, service-account security and authenticated remote access.
+
+#### 5. Local Automation and Notification Integrations
 * **n8n (Dockerized Web Interface):** Workflow automation tool running locally on `SPLUNK-SRV`, receiving Splunk alerts through a webhook and coordinating threat-intelligence enrichment and AI-assisted analysis.
 * **AbuseIPDB:** Threat-intelligence service used by n8n to enrich IP addresses associated with Splunk alerts.
 * **Gemini:** AI service used by n8n for AI-assisted alert analysis.

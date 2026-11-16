@@ -7,15 +7,16 @@
 | ID | Investigation | Severity | Disposition | Assigned Analyst |
 |---|---|---|---|---|
 | I-01 | Windows failed logon activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
-| I-02 | Successful logon following repeated failures | 🔴 High | True Positive | Tier 2 SOC Analyst |
+| I-02 | Successful logon following repeated failures | 🟠 High | True Positive | Tier 2 SOC Analyst |
 | I-03 | SSH brute-force activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
-| I-04 | RDP brute-force activity | 🔴 High | True Positive | Tier 1 SOC Analyst |
-| I-05 | Mythic command-and-control activity | 🔴 High | True Positive | Tier 2 SOC Analyst |
+| I-04 | RDP brute-force activity | 🟠 High | True Positive | Tier 1 SOC Analyst |
+| I-05 | Mythic command-and-control activity | 🔴 Critical | True Positive | Tier 2 SOC Analyst |
 | I-06 | EICAR malware detection and quarantine | Not assessed | Not conducted | Not assigned |
 | I-07 | File integrity monitoring alert | To be assessed | Pending investigation | Tier 1 SOC Analyst |
 | I-08 | Controlled endpoint isolation and recovery | To be assessed | Pending investigation | Tier 2 SOC Analyst |
-| I-09 | Network flow and packet analysis | 🔴 High | Inconclusive | Tier 2 SOC Analyst |
-| I-10 | SIEM investigation of suspicious activity | 🔴 High | True Positive | Tier 2 SOC Analyst |
+| I-09 | Network flow and packet analysis | 🟠 High | Inconclusive | Tier 2 SOC Analyst |
+| I-10 | SIEM investigation of suspicious activity | 🟠 High| True Positive | Tier 2 SOC Analyst |
+| I-11 | Authentication Investigation | 🟠 High | True Positive | Tier 2 SOC Analyst |
 
 ## Investigation Details
 
@@ -148,3 +149,17 @@
 | **Response** | Documented investigation evidence; no containment action confirmed. |
 | **Outcome** | Confirmed successful Administrator access, Apollo execution, C2 activity and simulated file exfiltration; no suspicious persistence or lateral movement confirmed. |
 | **MITRE ATT&CK Mapping** | T1110.001 – Password Guessing; T1078 – Valid Accounts; T1059.001 – PowerShell; T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
+
+
+### I-11 · Authentication Investigation
+
+| | |
+|---|---|
+| **Asset** | DC1 (192.168.56.110), WS01 (192.168.56.102), DeleDFIR.local |
+| **Detection** | Weak domain password controls, suspicious credential use and Kerberos service-account exposure |
+| **Telemetry** | Active Directory, Windows authentication, SMB, Kerberos, BloodHound and password-policy data |
+| **Investigation** | Validated domain-user authentication, assessed password policies, tested credentials through NetExec and SMB, reviewed AD identities and relationships with BloodHound, and investigated credential exposure and Kerberos service-account weaknesses. |
+| **Findings** | Identified weak password-policy settings and validated low-privileged domain credentials through SMB. BloodHound collection exposed a password stored in an AD user Description attribute. A Kerberoasting assessment recovered the weak password of an SPN-enabled service account. PSExec and SMBExec also demonstrated successful authenticated remote execution on WS01 with SYSTEM privileges. |
+| **Response** | Reset the exposed account password, cleared its AD Description attribute, and documented recommendations for stronger password policies, secure service-account credentials and least-privilege access. |
+| **Outcome** | Confirmed multiple domain credential weaknesses, validated their security impact and verified remediation of the exposed AD credential. |
+| **MITRE ATT&CK Mapping** | T1078.002 – Domain Accounts; T1110.002 – Password Cracking; T1552.001 – Credentials In Files; T1558.003 – Kerberoasting; T1021.002 – SMB/Windows Admin Shares. |

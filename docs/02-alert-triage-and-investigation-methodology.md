@@ -1,6 +1,6 @@
 # 02 · Alert Triage & Investigation Methodology
 
-This methodology defines a consistent process for reviewing security alerts, investigating suspicious activity and determining appropriate response actions across the simulated SOC environment.
+This methodology defines a consistent process for reviewing security alerts, investigating suspicious activity and determining appropriate response actions across the SOC environment.
 
 ## Process
 

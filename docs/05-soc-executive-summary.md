@@ -20,7 +20,7 @@ This project simulates a Security Operations Center (SOC) for Triton Health Serv
 | Area | Implementation |
 |---|---|
 | Security monitoring | Centralised Windows and Linux telemetry across SIEM platforms |
-| Detection and triage | Authentication, brute-force, malware and suspicious activity detections |
+| Detection and triage | Authentication, brute-force, malware and suspicious activity detection and investigation |
 | Threat investigation | Event correlation, endpoint analysis and threat intelligence enrichment |
 | Incident response | Verified endpoint isolation, firewall blocking and malware quarantine |
 | SOC automation | Alert enrichment and response workflows using automation platforms |
