@@ -1,21 +1,21 @@
-# SOC Analyst Portfolio Project: Triton Health Services
+# SOC Analyst Operation: Triton Health Services
 
 > **Portfolio project.** Triton Health Services is a fictional healthcare organization created for this SOC simulation. All systems, users, security events and findings are illustrative and based on controlled lab activities.
 
 ## Overview
 
-An end-to-end Security Operations Center (SOC) simulation for **Triton Health Services**, a fictional healthcare organization operating an on-premises Windows and Linux environment with Active Directory, endpoints, servers and centralized security monitoring.
+An end-to-end Security Operations Center (SOC) operation for **Triton Health Services**, a fictional healthcare organization operating an on-premises Windows and Linux environment with Active Directory, endpoints, servers and centralized security monitoring.
 
-The project demonstrates how a SOC Analyst monitors security telemetry, detects suspicious activity, investigates alerts, correlates events, enriches indicators of compromise and coordinates incident response.
+This project demonstrates how security telemetry is monitored, alerts are triaged, suspicious activity is investigated, events are correlated across SIEM, endpoint, network and authentication data, indicators of compromise are enriched, and incident response activities are coordinated and documented.
 
-**Why I built this:** SOC Analyst job descriptions repeatedly require practical experience in alert monitoring, triage, investigation, threat detection and incident response. This project demonstrates those capabilities through hands-on implementation rather than theoretical descriptions. See [how this project maps to real job requirements](docs/06-soc-job-requirements-map.md).
+**Why I built this:** SOC Analyst job descriptions repeatedly require practical experience in security monitoring, alert triage, investigation, threat detection and incident response. I wanted to demonstrate these capabilities through hands-on implementation, not just describe them. See [how this project maps to real job requirements](docs/06-soc-job-requirements-map.md).
 
 ## Key Findings
 
 | Severity | Count | Headline |
 |---|---:|---|
-| 🔴 Critical | 1 | Mythic command-and-control activity detected through endpoint telemetry |
-| 🟠 High | 3 | RDP brute-force activity, SSH brute-force activity and suspicious endpoint execution |
+| 🔴 Critical | 1 | Mythic command-and-control activity and confirmed credential exfiltration from DC1 |
+| 🟠 High | 5 | RDP brute-force, logon anomalies, network flow analysis, SIEM investigations and AD authentication weaknesses including Kerberoasting |
 | 🟡 Medium | 2 | Unauthorized file modifications and suspicious account activity |
 | 🟢 Low | Not established | No low-severity findings formally documented |
 
@@ -77,4 +77,4 @@ Full architecture and telemetry flow: [docs/03-soc-architecture-and-telemetry-fl
 
 ## Tools
 
-Splunk Enterprise · LimaCharlie · Tines · n8n · Sysmon · Windows Server · Linux · Active Directory · PowerShell · Python · MITRE ATT&CK · AbuseIPDB · VirusTotal · GreyNoise · Markdown · Mermaid · Draw.io · VSCode
+Splunk Enterprise · LimaCharlie · Tines · n8n · Sysmon · Windows Server · Linux · Active Directory · PowerShell · Python · MITRE ATT&CK · AbuseIPDB · VirusTotal · GreyNoise · Markdown · Mermaid · Draw.io · VSCode · Wireshark · SPL
