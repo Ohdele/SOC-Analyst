@@ -12,35 +12,32 @@ This document outlines the response process for investigating security alerts, c
 | 4 | Correlate relevant Windows, Linux and network telemetry. | Supporting event records |
 | 5 | Escalate confirmed or high-impact incidents where necessary. | Investigation record |
 
-## Phase 2: Investigation and Containment
+**## Phase 2: Investigation and Containment**
 
 | Step | Action | Expected Evidence |
 |---|---|---|
 | 1 | Investigate suspicious activity and establish its scope. | Investigation findings |
 | 2 | Identify affected endpoints, accounts and network indicators. | Evidence and IOC records |
-| 3 | Isolate affected endpoints where authorised and supported. | Isolation verification |
+| 3 | Obtain approval and isolate affected endpoints. | Approval and isolation records |
 | 4 | Disable compromised accounts or block malicious IPs where appropriate. | Verified response records |
 | 5 | Preserve relevant logs and investigation evidence. | Evidence records |
 
-## Phase 3: Remediation and Recovery
+**## Phase 3: Remediation and Recovery**
 
 | Step | Action | Expected Evidence |
 |---|---|---|
 | 1 | Remove identified malicious files or activity where applicable. | Remediation records |
 | 2 | Reset compromised credentials and review account access where necessary. | Account remediation evidence |
-| 3 | Restore affected endpoints or services where required. | Recovery records |
-| 4 | Verify endpoint security and monitoring functionality. | Verification evidence |
-| 5 | Confirm that the suspicious activity has stopped. | Post-remediation findings |
+| 3 | Restore affected endpoints after remediation and containment checks. | Recovery records |
+| 4 | Verify endpoint health and monitoring before returning systems to service. | Verification evidence |
 
-## Response Validation
+**## Response Validation**
 
 | Area | Validation Requirement |
 |---|---|
-| Detection | Confirm the alert was generated and investigated. |
-| Containment | Verify that the authorised containment action succeeded. |
-| Remediation | Confirm identified threats or weaknesses were addressed. |
-| Recovery | Verify that affected systems returned to operation. |
-| Documentation | Complete the investigation record and preserve supporting evidence. |
+| Incident closure | Confirm investigation findings, response actions and recovery checks are documented and supported by evidence. |
+| Authorisation | Confirm required approvals were obtained and recorded. |
+| Closure decision | Record outstanding risks, follow-up actions and final incident disposition. |
 
 ## Tracking
 

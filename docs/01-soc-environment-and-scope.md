@@ -12,7 +12,7 @@
 | **Environment** | On-premises Windows enterprise with Active Directory, Windows endpoints, Linux servers and network infrastructure |
 | **Data held** | Electronic patient health records, patient identification and contact details, employee information, appointment and billing records, internal business documents and security logs |
 | **Security operations** | Small SOC responsible for security monitoring, alert triage, investigation and incident response |
-| **Infrastructure** | Centralised security monitoring across Elastic SIEM, Splunk and Wazuh |
+| **Infrastructure** | Centralised security monitoring using Splunk SIEM, LimaCharlie EDR and integrated SOAR automation |
 
 ## Why This Project Matters
 

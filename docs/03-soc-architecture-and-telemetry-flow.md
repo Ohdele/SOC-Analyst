@@ -2,7 +2,6 @@
 
 Understanding **where security events originate, how telemetry moves and where it is analysed** is the foundation of the SOC. Every investigation connects to a point in this architecture.
 
-
 ```mermaid
 flowchart LR
     subgraph ATTACK["Attack Infrastructure"]
@@ -42,8 +41,10 @@ flowchart LR
 
     DC -->|"Endpoint telemetry and<br/>credential-access detection"| LC
     LC -->|"Detection forwarding"| TINES
+    TINES -->|"Analyst approval request"| SLACK
     TINES -->|"Analyst-approved isolation"| LC
-    TINES -->|"Notifications"| SLACK
+    LC -->|"Isolation execution and status"| TINES
+    TINES -->|"Response-status updates"| SLACK
     TINES -->|"Notifications"| EMAIL
 
     N8N -->|"IP enrichment request"| ABUSE
@@ -88,11 +89,12 @@ LimaCharlie.
 - **Investigation Scope:** Domain authentication, password-policy assessment, credential exposure and remediation, service-account security and authenticated remote access.
 
 #### 5. Local Automation and Notification Integrations
-* **n8n (Dockerized Web Interface):** Workflow automation tool running locally on `SPLUNK-SRV`, receiving Splunk alerts through a webhook and coordinating threat-intelligence enrichment and AI-assisted analysis.
-* **AbuseIPDB:** Threat-intelligence service used by n8n to enrich IP addresses associated with Splunk alerts.
-* **Gemini:** AI service used by n8n for AI-assisted alert analysis.
-* **Slack:** Receives notifications from both the n8n automation workflow and Tines SOAR workflows.
-* **Email:** Receives notifications from Tines SOAR workflows.
+
+- **n8n (Dockerized Web Interface):** Workflow automation tool running locally on `SPLUNK-SRV`, receiving Splunk alerts through a webhook and coordinating threat-intelligence enrichment and AI-assisted analysis.
+- **AbuseIPDB:** Threat-intelligence service used by n8n to enrich IP addresses associated with Splunk alerts.
+- **Gemini:** AI service used by n8n for AI-assisted alert analysis.
+- **Slack:** Receives notifications from both the n8n automation workflow and Tines SOAR workflows, including EDR detection and response-status notifications.
+- **Email:** Receives notifications from Tines SOAR workflows, including EDR detection and response updates.
 
 ---
 
@@ -101,10 +103,10 @@ LimaCharlie.
 1. **Attacker Activity:** Kali Linux (`192.168.56.101`) generates controlled authentication-failure activity against `WS01` (`192.168.56.102`).
 2. **Authentication:** `WS01` processes the authentication attempts against the domain environment, generating Windows authentication events.
 3. **Log Ingestion:** The Splunk Universal Forwarder on `WS01` forwards Windows Security, System, Application and Sysmon Operational logs to Splunk Enterprise on `SPLUNK-SRV` over receiving port `9997`.
-4. **EDR Telemetry & Detection:** The LimaCharlie sensor installed on `DC1` sends endpoint telemetry to the LimaCharlie cloud platform, where controlled credential-access activity is detected.
+4. **EDR Telemetry & Detection:** The LimaCharlie sensor on `DC1` sends endpoint telemetry to the cloud platform, where credential-access activity is detected.
 5. **SOAR Detection Forwarding:** LimaCharlie forwards detection events to Tines for SOAR workflow processing.
-6. **Analyst-Approved Response:** Tines requests analyst approval before initiating endpoint isolation through LimaCharlie; approved isolation actions are executed through the EDR platform.
-7. **SOAR Notifications:** Tines sends alert notifications and response-status updates through Slack and email.
+6. **Analyst-Approved Response:** Tines requests analyst approval before initiating endpoint isolation through LimaCharlie.
+7. **Response Verification & Notifications:** LimaCharlie returns isolation status to Tines, which sends detection and response updates through Slack and email.
 8. **Splunk Alert Automation:** Splunk sends alert data to an n8n webhook hosted on `SPLUNK-SRV`.
 9. **Threat Intelligence Enrichment:** n8n sends relevant IP indicators to AbuseIPDB for threat-intelligence enrichment.
 10. **AI-Assisted Analysis:** n8n sends alert information for analysis by Gemini.

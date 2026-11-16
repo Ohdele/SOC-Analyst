@@ -13,7 +13,7 @@
 | I-05 | Mythic command-and-control activity | 🔴 Critical | True Positive | Tier 2 SOC Analyst |
 | I-06 | EICAR malware detection and quarantine | Not assessed | Not conducted | Not assigned |
 | I-07 | File integrity monitoring alert | To be assessed | Pending investigation | Tier 1 SOC Analyst |
-| I-08 | Controlled endpoint isolation and recovery | To be assessed | Pending investigation | Tier 2 SOC Analyst |
+| I-08 | EDR detection and automated response | 🟠 High | True Positive | Tier 2 SOC Analyst |
 | I-09 | Network flow and packet analysis | 🟠 High | Inconclusive | Tier 2 SOC Analyst |
 | I-10 | SIEM investigation of suspicious activity | 🟠 High| True Positive | Tier 2 SOC Analyst |
 | I-11 | Authentication Investigation | 🟠 High | True Positive | Tier 2 SOC Analyst |
@@ -111,18 +111,18 @@
 | **Outcome** | To be documented. |
 | **MITRE ATT&CK Mapping** | To be assessed. |
 
-### I-08 · Controlled Endpoint Isolation and Recovery
+### I-08 · EDR detection and automated response
 
 | | |
 |---|---|
 | **Asset** | DC1 |
-| **Detection** | Controlled response workflow |
-| **Telemetry** | LimaCharlie endpoint telemetry |
-| **Investigation** | Review the event and verify analyst-approved isolation. |
-| **Findings** | To be documented. |
-| **Response** | Document endpoint isolation and recovery verification. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
+| **Detection** | LaZagne credential-access activity |
+| **Telemetry** | Endpoint process and detection events |
+| **Investigation** | Validated the detection using process path, command-line and file-hash evidence. |
+| **Findings** | Confirmed credential-access execution on DC1. |
+| **Response** | Forwarded alerts through Slack and email, obtained analyst approval and automated endpoint isolation following approval from LimaCharlie. |
+| **Outcome** | Verified `isolation`, completed `post-incident` endpoint checks, confirmed `remediation` readiness, obtained authorization and `restored network access`; credential rotation and monitoring validation remain recommended follow-up actions. |
+| **MITRE ATT&CK Mapping** | T1003 – OS Credential Dumping. |
 
 ### I-09 · Network Flow and Packet Analysis
 
