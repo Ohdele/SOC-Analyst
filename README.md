@@ -6,7 +6,7 @@
 
 An end-to-end Security Operations Center (SOC) operation for **Triton Health Services**, a fictional healthcare organization operating an on-premises Windows and Linux environment with Active Directory, endpoints, servers and centralized security monitoring.
 
-This project demonstrates how security telemetry is monitored, alerts are triaged, suspicious activity is investigated, events are correlated across SIEM, endpoint, network and authentication data, indicators of compromise are enriched, and incident response activities are coordinated and documented.
+This project demonstrates security monitoring, alert triage, endpoint and network investigation, event correlation, threat intelligence enrichment, detection engineering, incident response and automated containment. It also demonstrates analyst-approved response actions, endpoint isolation, containment verification and recovery.
 
 **Why I built this:** SOC Analyst job descriptions repeatedly require practical experience in security monitoring, alert triage, investigation, threat detection and incident response. I wanted to demonstrate these capabilities through hands-on implementation, not just describe them. See [how this project maps to real job requirements](docs/06-soc-job-requirements-map.md).
 
@@ -15,30 +15,34 @@ This project demonstrates how security telemetry is monitored, alerts are triage
 | Severity | Count | Headline |
 |---|---:|---|
 | 🔴 Critical | 1 | Mythic command-and-control activity and confirmed credential exfiltration from DC1 |
-| 🟠 High | 5 | RDP brute-force, logon anomalies, network flow analysis, SIEM investigations and AD authentication weaknesses including Kerberoasting |
+| 🟠 High | 6 | RDP brute-force, logon anomalies, network flow analysis, SIEM investigations, AD authentication weaknesses including `Kerberoasting` and `LaZagne` credential-access activity |
 | 🟡 Medium | 2 | Unauthorized file modifications and suspicious account activity |
 | 🟢 Low | Not established | No low-severity findings formally documented |
 
 **Top priority:** Investigate and contain confirmed malicious activity, prioritizing command-and-control behaviour and repeated authentication attacks.
 
-## Architecture
+**## Architecture**
 
 ```mermaid
 flowchart TD
     A[Windows Endpoints] --> B[Security Telemetry]
     C[Linux Servers] --> B
     D[Active Directory] --> B
-    B --> E[SIEM Platforms]
-    E --> F[Alert Detection]
-    F --> G[Investigation and Triage]
-    G --> H[Threat Intelligence Enrichment]
-    H --> I[Incident Response]
-    I --> J[Containment and Verification]
-    G --> K[Investigation Documentation]
-    I --> K
+    E[pfSense Firewall] --> B
+    B --> F[SIEM Platforms]
+    B --> G[EDR Platform]
+    F --> H[Alert Detection]
+    G --> H
+    H --> I[Investigation and Triage]
+    I --> J[Threat Intelligence Enrichment]
+    J --> K[SOAR Orchestration]
+    K --> L[Analyst Approval]
+    L --> M[Incident Response]
+    M --> N[Containment and Verification]
+    N --> O[Recovery]
+    I --> P[Investigation Documentation]
+    M --> P
 ```
-
-Full architecture and telemetry flow: [docs/03-soc-architecture-and-telemetry-flow.md](docs/03-soc-architecture-and-telemetry-flow.md)
 
 ## Project Structure
 
@@ -57,15 +61,19 @@ Full architecture and telemetry flow: [docs/03-soc-architecture-and-telemetry-fl
 - **MITRE ATT&CK:** Mapping observed adversary behaviour to tactics and techniques.
 - **Incident Response:** Investigation, containment, remediation and recovery activities.
 - **Security Monitoring:** Centralized collection and analysis of Windows and Linux security telemetry.
+- **Endpoint Detection and Response:** Monitoring endpoint activity, detecting credential-access behaviour and validating containment actions.
 - **Threat Intelligence:** Enrichment and assessment of indicators of compromise.
 - **Detection Engineering:** Developing, testing and refining detection rules.
+- **Security Orchestration and Automation:** Coordinating alert notifications, analyst approval and automated endpoint isolation.
+- **Network Security Monitoring:** Firewall traffic filtering, packet monitoring and analysis.
 
 ## What I Learned
 
-- **Alert detection is only the starting point.** Security events need investigation and validation before conclusions can be drawn.
-- **Correlating telemetry provides context.** Combining endpoint, authentication and network-related events helps build a clearer picture of suspicious activity.
+- **Alert investigation requires evidence-based validation.** Correlating endpoint, authentication and network telemetry helps establish whether suspicious activity represents a genuine threat.
 - **Containment requires verification.** A response action should be followed by checks confirming whether the intended security outcome was achieved.
+- **Firewall enforcement provides an independent security layer.** Network traffic can be blocked before it reaches endpoints.
 - **Documentation supports operational decisions.** Recording investigation findings, evidence and response actions makes incidents easier to review and communicate.
+- **Human-in-the-loop automation supports faster response.** Integrating EDR and SOAR workflows streamlines response while keeping analysts in control of critical actions.
 
 ## What I'd Improve
 
@@ -77,4 +85,4 @@ Full architecture and telemetry flow: [docs/03-soc-architecture-and-telemetry-fl
 
 ## Tools
 
-Splunk Enterprise · LimaCharlie · Tines · n8n · Sysmon · Windows Server · Linux · Active Directory · PowerShell · Python · MITRE ATT&CK · AbuseIPDB · VirusTotal · GreyNoise · Markdown · Mermaid · Draw.io · VSCode · Wireshark · SPL
+Splunk · EDR · SOAR · Sysmon · pfSense · Suricata · Active Directory · PowerShell · MITRE ATT&CK · Wireshark · SPL · Linux · Python

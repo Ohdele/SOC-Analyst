@@ -150,16 +150,28 @@
 | **Outcome** | Confirmed successful Administrator access, Apollo execution, C2 activity and simulated file exfiltration; no suspicious persistence or lateral movement confirmed. |
 | **MITRE ATT&CK Mapping** | T1110.001 – Password Guessing; T1078 – Valid Accounts; T1059.001 – PowerShell; T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
 
-
 ### I-11 · Authentication Investigation
 
 | | |
 |---|---|
-| **Asset** | DC1, WS01, DeleDFIR.local |
-| **Detection** | Weak domain password controls, suspicious credential use and Kerberos service-account exposure |
-| **Telemetry** | Active Directory, Windows authentication, SMB, Kerberos, BloodHound and password-policy data |
-| **Investigation** | Validated domain authentication, tested credentials via `NetExec/SMB`, mapped AD paths with `BloodHound` and analyzed Kerberos weaknesses |
-| **Findings** | Identified weak password policies, exposed credentials via `SMB` and AD Description attributes, recovered a service-account password via `Kerberoasting` and verified remote execution as SYSTEM on WS01. |
-| **Response** | Reset the exposed account password, cleared its `AD Description attribute`, and documented recommendations for stronger password policies, secure service-account credentials and least-privilege access. |
-| **Outcome** | Confirmed multiple domain credential weaknesses, validated their security impact and verified remediation of the exposed AD credential. |
-| **MITRE ATT&CK Mapping** | `T1078.002` – Domain Accounts; `T1110.002` – Password Cracking; `T1552.001` – Credentials In Files; `T1558.003` – Kerberoasting; `T1021.002` – SMB/Windows Admin Shares. |
+| **Asset** | DC1, WS01 and DeleDFIR.local |
+| **Detection** | Weak password controls, exposed account credentials, Kerberos service-account exposure and unusual remote execution activity. |
+| **Telemetry** | Active Directory account attributes and policies, Windows authentication events, SMB, Kerberos and endpoint security events. |
+| **Investigation** | Examined password policy enforcement, traced credential exposure, assessed account privileges and reviewed authentication and remote execution activity. |
+| **Findings** | Enumerated 56 users, 64 groups and 2 computers; confirmed exposed AD credentials, a crackable Kerberos service-account password and SYSTEM-level access on WS01. |
+| **Response** | Reset the exposed user password, cleared the AD description and documented service-account security and least-privilege improvements. |
+| **Outcome** | Verified removal of the exposed credential and demonstrated the security impact of domain credential weaknesses. |
+| **MITRE ATT&CK Mapping** | `T1078.002` – Domain Accounts; `T1110.002` – Password Cracking; `T1552` – Unsecured Credentials; `T1558.003` – Kerberoasting; `T1021.002` – SMB/Windows Admin Shares. |
+
+### I-12 · Firewall and Network Security Monitoring
+
+| | |
+|---|---|
+| **Asset** | pfSense, Kali, Metasploitable2 and SPLUNK-SRV. |
+| **Detection** | Blocked traffic and network-scan activity. |
+| **Telemetry** | Firewall filterlog, system logs, alert logs and EVE TLS events. |
+| **Investigation** | Reviewed firewall activity, corrected ICMP logging, validated scan detection/blocking and checked authentication correlation. |
+| **Findings** | 87 blocked inbound events were benign broadcasts; 22,710 rules loaded (9 failed); no intrusion identified. |
+| **Response** | Applied filtering, threat blocking and centralized security logging. |
+| **Outcome** | Verified firewall logging, detection/blocking and event ingestion |
+| **MITRE ATT&CK Mapping** | `T1046` – Network Service Discovery |

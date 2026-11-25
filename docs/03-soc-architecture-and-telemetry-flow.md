@@ -56,8 +56,6 @@ flowchart LR
 
 ### Architecture Overview
 
-![SOC Lab Architecture](../Screenshots/SOC-Analyst%20Diagram.png)
-
 This diagram depicts a hybrid SOC lab environment built around a local VirtualBox host, where local virtual machines, Dockerized microservices and external SaaS applications are integrated through the host system's web browser.
 
 The environment uses a VirtualBox host-only network (`192.168.56.0/24`), while NAT networking provides internet access to the virtual machines. It contains Windows domain infrastructure, a Windows workstation, a Splunk SIEM server, a Kali Linux attack simulation machine and cloud-hosted EDR and SOAR platforms.

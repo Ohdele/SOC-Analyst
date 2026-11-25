@@ -10,20 +10,20 @@ This project simulates a Security Operations Center (SOC) for Triton Health Serv
 
 ## What Could Go Wrong
 
-1. **Unauthorised account access:** Repeated authentication failures or compromised credentials could provide attackers access to organisational systems.
+1. **Unauthorised access:** Compromised credentials or inadequate firewall controls could allow attackers to access organisational systems and networks.
 2. **Malicious endpoint activity:** Malware or command-and-control activity could compromise workstations and servers.
-3. **Undetected network threats:** Suspicious network activity could remain unnoticed without effective telemetry collection and correlation.
+3. **Undetected security threats:** Insufficient telemetry collection and event correlation could allow malicious activity to remain unnoticed.
 4. **Delayed incident response:** Poor alert triage and delayed containment could increase attacker dwell time and operational impact.
 
 ## What We Implemented
 
 | Area | Implementation |
 |---|---|
-| Security monitoring | Centralised Windows and Linux telemetry across SIEM platforms |
-| Detection and triage | Authentication, brute-force, malware and suspicious activity detection and investigation |
-| Threat investigation | Event correlation, endpoint analysis and threat intelligence enrichment |
-| Incident response | Analyst-approved endpoint isolation, containment verification and post-incident recovery checks |
-| SOC automation | Automated alert notifications, analyst approval and endpoint isolation workflows |
+| Detection and triage | [Template] Authentication, brute-force, malware and suspicious activity detection and investigation |
+| Threat investigation | [Template] Event correlation, endpoint analysis and threat intelligence enrichment |
+| Incident response | [Template] Analyst-approved endpoint isolation, containment verification and post-incident recovery checks |
+| SOC automation | [Template] Automated alert notifications, analyst approval and endpoint isolation workflows |
+| **Firewall monitoring & analysis** | Configured rules, routing and network segmentation, Suricata IDS/IPS detection/blocking, and Splunk firewall log forwarding and investigation for correlatio. |
 
 ## What We Need From You
 
@@ -33,4 +33,4 @@ This project simulates a Security Operations Center (SOC) for Triton Health Serv
 
 ## After These Actions
 
-The project provides documented evidence of SOC monitoring, investigation and response capabilities, with remaining gaps and future improvements identified through implementation.
+The project provides documented evidence of SOC monitoring, investigation and response capabilities, firewall monitoring & analysis and event correlation with remaining gaps and future improvements identified through implementation.
