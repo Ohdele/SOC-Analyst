@@ -32,6 +32,8 @@
 - SIEM monitoring, alert detection and investigation
 - Threat intelligence enrichment and SOC automation
 - Incident containment, remediation and recovery workflows
+- Firewall monitoring and network traffic analysis
+- Web proxy monitoring and HTTP/HTTPS request investigation
 
 **Out of scope**
 
@@ -42,7 +44,6 @@
 
 ## Assumptions
 
-- Triton Health Services and its infrastructure are simulated for this portfolio project.
 - The environment represents an on-premises healthcare enterprise.
 - Security investigations use controlled lab activity and test data.
 - Findings and response actions are based on available lab telemetry and verified implementation evidence.

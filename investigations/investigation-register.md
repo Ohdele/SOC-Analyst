@@ -6,32 +6,16 @@
 
 | ID | Investigation | Severity | Disposition | Assigned Analyst |
 |---|---|---|---|---|
-| I-01 | Windows failed logon activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
 | I-02 | Successful logon following repeated failures | 🟠 High | True Positive | Tier 2 SOC Analyst |
-| I-03 | SSH brute-force activity | To be assessed | Pending investigation | Tier 1 SOC Analyst |
 | I-04 | RDP brute-force activity | 🟠 High | True Positive | Tier 1 SOC Analyst |
 | I-05 | Mythic command-and-control activity | 🔴 Critical | True Positive | Tier 2 SOC Analyst |
-| I-06 | EICAR malware detection and quarantine | Not assessed | Not conducted | Not assigned |
-| I-07 | File integrity monitoring alert | To be assessed | Pending investigation | Tier 1 SOC Analyst |
 | I-08 | EDR detection and automated response | 🟠 High | True Positive | Tier 2 SOC Analyst |
 | I-09 | Network flow and packet analysis | 🟠 High | Inconclusive | Tier 2 SOC Analyst |
 | I-10 | SIEM investigation of suspicious activity | 🟠 High| True Positive | Tier 2 SOC Analyst |
-| I-11 | Authentication Investigation | 🟠 High | True Positive | Tier 2 SOC Analyst |
+| I-12 | Firewall and network security monitoring | 🟡 Medium | Benign / No Intrusion | Tier 2 SOC Analyst |
+| I-13 | Web proxy monitoring and investigation | 🟢 Low / Informational | Benign / Policy Block | Tier 2 SOC Analyst |
 
 ## Investigation Details
-
-### I-01 · Windows Failed Logon Activity
-
-| | |
-|---|---|
-| **Asset** | Windows endpoint |
-| **Detection** | Test-Brute-Force |
-| **Telemetry** | Windows Event ID 4625 |
-| **Investigation** | Analyse repeated failed logons and identify the source. |
-| **Findings** | To be documented. |
-| **Response** | Document verified response actions. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
 
 ### I-02 · Successful Logon Following Repeated Failures
 
@@ -45,19 +29,6 @@
 | **Response** | Documented authentication evidence; no containment action confirmed. |
 | **Outcome** | Confirmed three successful Administrator sessions from Kali; full compromise duration not established. |
 | **MITRE ATT&CK Mapping** | T1078 – Valid Accounts. |
-
-### I-03 · SSH Brute-Force Activity
-
-| | |
-|---|---|
-| **Asset** | DFIR-Linux |
-| **Detection** | Wazuh SSH brute-force alert |
-| **Telemetry** | Linux authentication logs |
-| **Investigation** | Analyse repeated SSH authentication failures and identify the source. |
-| **Findings** | To be documented. |
-| **Response** | Document verified firewall-drop response. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
 
 ### I-04 · RDP Brute-Force Activity
 
@@ -84,32 +55,6 @@
 | **Response** | Documented C2 activity and simulated exfiltration evidence; no containment action confirmed. |
 | **Outcome** | Confirmed Mythic C2 activity and simulated retrieval of a 167-byte `passwords.txt` artifact (10 Nov 2026, Task T-3). |
 | **MITRE ATT&CK Mapping** | T1071.001 – Web Protocols; T1041 – Exfiltration Over C2 Channel. |
-
-### I-06 · EICAR Malware Detection and Quarantine
-
-| | |
-|---|---|
-| **Asset** | Windows endpoint |
-| **Detection** | EICAR test-file detection |
-| **Telemetry** | Endpoint security telemetry |
-| **Investigation** | Review the detection and verify quarantine. |
-| **Findings** | To be documented. |
-| **Response** | Document the verified quarantine action. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
-
-### I-07 · File Integrity Monitoring Alert
-
-| | |
-|---|---|
-| **Asset** | Monitored endpoint |
-| **Detection** | File integrity monitoring alert |
-| **Telemetry** | Wazuh FIM events |
-| **Investigation** | Examine the affected file and determine the nature of the change. |
-| **Findings** | To be documented. |
-| **Response** | Document verified response actions. |
-| **Outcome** | To be documented. |
-| **MITRE ATT&CK Mapping** | To be assessed. |
 
 ### I-08 · EDR detection and automated response
 
@@ -175,3 +120,16 @@
 | **Response** | Applied filtering, threat blocking and centralized security logging. |
 | **Outcome** | Verified firewall logging, detection/blocking and event ingestion |
 | **MITRE ATT&CK Mapping** | `T1046` – Network Service Discovery |
+
+### I-13 · Web Proxy Monitoring and Investigation
+
+| | |
+|---|---|
+| **Asset** | SQUID-SRV, SPLUNK-SRV, Kali and WS01 |
+| **Detection** | Denied HTTPS CONNECT request |
+| **Telemetry** | Squid access logs forwarded to Splunk |
+| **Investigation** | Analysed proxy requests, client activity, destination URLs, HTTP methods, response statuses and User-Agent data. |
+| **Findings** | Confirmed a denied Kali HTTPS CONNECT request to `example.com:8443` (`TCP_DENIED/403`); verified Kali and WS01 proxy activity and User-Agent logging in Splunk. |
+| **Response** | Documented the denied request and verified proxy access controls and centralized logging. |
+| **Outcome** | Confirmed proxy log ingestion and search-time field extraction in Splunk. |
+| **MITRE ATT&CK Mapping** | Not assigned; no malicious activity established. |

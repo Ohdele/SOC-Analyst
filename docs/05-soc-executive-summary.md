@@ -19,11 +19,10 @@ This project simulates a Security Operations Center (SOC) for Triton Health Serv
 
 | Area | Implementation |
 |---|---|
-| Detection and triage | [Template] Authentication, brute-force, malware and suspicious activity detection and investigation |
-| Threat investigation | [Template] Event correlation, endpoint analysis and threat intelligence enrichment |
-| Incident response | [Template] Analyst-approved endpoint isolation, containment verification and post-incident recovery checks |
-| SOC automation | [Template] Automated alert notifications, analyst approval and endpoint isolation workflows |
-| **Firewall monitoring & analysis** | Configured rules, routing and network segmentation, Suricata IDS/IPS detection/blocking, and Splunk firewall log forwarding and investigation for correlatio. |
+| **Detection and triage** | Authentication, brute-force, malware and suspicious activity detection and investigation |
+| **Threat investigation** | Event correlation, endpoint, packet, firewall and web proxy investigation across Splunk, pfSense, Suricata, Squid and Wireshark. |
+| **Incident response & automation** | Alert notifications, analyst-approved endpoint isolation, containment verification and recovery checks using LimaCharlie, Slack and email. |
+
 
 ## What We Need From You
 
@@ -33,4 +32,4 @@ This project simulates a Security Operations Center (SOC) for Triton Health Serv
 
 ## After These Actions
 
-The project provides documented evidence of SOC monitoring, investigation and response capabilities, firewall monitoring & analysis and event correlation with remaining gaps and future improvements identified through implementation.
+The project provides documented evidence of SOC monitoring, investigation, event correlation and incident response capabilities, with remaining gaps and opportunities for improvement identified through implementation.

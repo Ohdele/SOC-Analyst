@@ -4,61 +4,51 @@ Understanding **where security events originate, how telemetry moves and where i
 
 ```mermaid
 flowchart LR
-    subgraph ATTACK["Attack Infrastructure"]
+    subgraph ATTACK["Attack & Target Infrastructure"]
         KALI["Kali Linux<br/>192.168.56.101"]
+        META["Metasploitable2"]
     end
 
     subgraph VBOX["VirtualBox Lab Environment"]
-        subgraph END["Monitored Systems"]
-            DC["DC1<br/>Windows Server 2022<br/>192.168.56.110<br/>Active Directory<br/>LimaCharlie Sensor"]
-            WS["WS01<br/>Windows 10<br/>192.168.56.102<br/>Sysmon<br/>Splunk Universal Forwarder"]
-        end
+        FW["pfSense-FW<br/>Firewall & Suricata"]
+        PROXY["SQUID-SRV<br/>Web Proxy VM"]
+        DC["DC1<br/>Windows Server 2022<br/>192.168.56.110"]
+        WS["WS01<br/>Windows 10<br/>192.168.56.102"]
+        SPL["SPLUNK-SRV<br/>Splunk Enterprise & n8n"]
 
-        subgraph SOC["Centralised Security Monitoring"]
-            SPL["SPLUNK-SRV<br/>Ubuntu Server<br/>192.168.56.130<br/>Splunk Enterprise<br/>Index: splunk_soc<br/>Port: 9997"]
-            N8N["n8n<br/>Docker Container<br/>Port: 5678"]
-        end
-
-        KALI -->|"Controlled authentication failures"| WS
-        WS -->|"Windows Security, System,<br/>Application and Sysmon logs"| SPL
-        SPL -->|"Alert webhook"| N8N
+        KALI -->|"Auth failures & traffic"| FW
+        KALI -->|"Target traffic"| META
+        KALI -->|"Web proxy traffic"| PROXY
+        WS -->|"Web proxy traffic"| PROXY
+        FW -->|"Firewall logs"| SPL
+        PROXY -->|"Proxy logs"| SPL
+        WS -->|"Host & Sysmon logs"| SPL
+        DC -->|"Domain & security logs"| SPL
     end
 
-    subgraph EDR["Cloud EDR and SOAR"]
-        LC["LimaCharlie<br/>Cloud EDR"]
-        TINES["Tines<br/>Cloud SOAR"]
+    subgraph CLOUD["Cloud EDR & SOAR"]
+        LC["LimaCharlie"]
+        TINES["Tines"]
     end
 
-    subgraph TI["External Enrichment Services"]
-        ABUSE["AbuseIPDB"]
-        GEMINI["Gemini"]
+    subgraph EXT["External Services & Alerts"]
+        TI["AbuseIPDB & Gemini"]
+        NOTIFY["Slack & Email"]
     end
 
-    subgraph NOTIFY["Notification Channels"]
-        SLACK["Slack"]
-        EMAIL["Email"]
-    end
-
-    DC -->|"Endpoint telemetry and<br/>credential-access detection"| LC
-    LC -->|"Detection forwarding"| TINES
-    TINES -->|"Analyst approval request"| SLACK
-    TINES -->|"Analyst-approved isolation"| LC
-    LC -->|"Isolation execution and status"| TINES
-    TINES -->|"Response-status updates"| SLACK
-    TINES -->|"Notifications"| EMAIL
-
-    N8N -->|"IP enrichment request"| ABUSE
-    ABUSE -->|"Enrichment results"| N8N
-    N8N -->|"AI analysis request"| GEMINI
-    GEMINI -->|"Analysis results"| N8N
-    N8N -->|"Enriched alert notification"| SLACK
+    DC -->|"Endpoint telemetry"| LC
+    LC -->|"Detections"| TINES
+    TINES -->|"Isolation & updates"| LC
+    TINES -->|"Alerts"| NOTIFY
+    SPL -->|"IOC & AI enrichment"| TI
+    TI -->|"Enriched alerts"| NOTIFY
 ```
 
 ### Architecture Overview
 
-This diagram depicts a hybrid SOC lab environment built around a local VirtualBox host, where local virtual machines, Dockerized microservices and external SaaS applications are integrated through the host system's web browser.
+This diagram depicts a `hybrid` SOC environment built around a local VirtualBox host, where local virtual machines, `Dockerized` microservices and external `SaaS` applications are integrated through the host system's web browser.
 
-The environment uses a VirtualBox host-only network (`192.168.56.0/24`), while NAT networking provides internet access to the virtual machines. It contains Windows domain infrastructure, a Windows workstation, a Splunk SIEM server, a Kali Linux attack simulation machine and cloud-hosted EDR and SOAR platforms.
+The environment uses a VirtualBox `host-only` network, while `NAT` networking provides internet access to the virtual machines. It includes Windows domain infrastructure, a Windows workstation, Splunk SIEM, Kali Linux, and `cloud-hosted` EDR and SOAR platforms. Separate lab environments extend the architecture with pfSense firewall and Suricata, a Squid web proxy, and Metasploitable2 as a vulnerable target system, using dedicated network segments.
 
 The portfolio also incorporates a separate Active Directory lab, `DeleDFIR.local`, used for authentication, identity and credential-security investigations; it is documented as a supporting environment and is not part of the primary `SplunkSOC.local` SOC architecture.
 
@@ -66,46 +56,44 @@ The portfolio also incorporates a separate Active Directory lab, `DeleDFIR.local
 
 ### Component Breakdown
 
-#### 1. Attack Infrastructure
-* **Kali Linux (Attack Machine) — `192.168.56.101`:** Authorized attack simulation VM generating controlled authentication-failure activity against `WS01`.
+#### 1. Attack and Target Infrastructure
+- **Kali Linux:** Authorized testing VM used for authentication testing, network scanning and HTTP/HTTPS proxy testing.
+- **Metasploitable2 — `192.168.57.10`:** Intentionally vulnerable target used for firewall and network security testing.
 
-#### 2. VirtualBox Lab Environment (Local On-Premises Network)
-* **DC1 (Windows Server 2022) — `192.168.56.110`:** Active Directory Domain Controller for the `SplunkSOC.local` domain, with a LimaCharlie EDR sensor installed; generates Windows security events and controlled credential-access telemetry.
-* **WS01 (Windows 10) — `192.168.56.102`:** Domain-joined workstation with Sysmon and Splunk Universal Forwarder installed; forwards Windows Security, System, Application and Sysmon Operational logs to Splunk.
-* **SPLUNK-SRV (Ubuntu Server) — `192.168.56.130`:** Hosts Splunk Enterprise SIEM using the `splunk_soc` index and receiving port `9997`, alongside Dockerized n8n automation running on port `5678`.
+#### 2. VirtualBox Lab Environment
+- **pfSense-FW — `192.168.56.121` (LAN):** Firewall and gateway providing traffic filtering, routing, network segmentation and Suricata IDS monitoring.
+- **SQUID-SRV — `192.168.56.140`:** Squid web proxy providing HTTP/HTTPS access controls, request monitoring and access-log forwarding.
+- **DC1 (Windows Server 2022):** Active Directory Domain Controller with LimaCharlie EDR sensor.
+- **WS01 (Windows 10):** Domain-joined workstation with Sysmon and Splunk Universal Forwarder.
+- **SPLUNK-SRV (Ubuntu Server):** Hosts Splunk Enterprise SIEM and Dockerized n8n automation.
 
 #### 3. Cloud-Hosted EDR and SOAR Integrations
-* **LimaCharlie:** Cloud EDR platform receiving endpoint telemetry from the enrolled DC1 sensor and detecting controlled credential-access activity.
-* **Tines:** Cloud SOAR platform receiving forwarded LimaCharlie detections, requesting analyst approval for endpoint isolation, sending Slack and email notifications and executing approved isolation actions through 
-LimaCharlie.
+- **LimaCharlie:** Cloud EDR platform for endpoint telemetry collection, detection and isolation.
+- **Tines:** Cloud SOAR platform for analyst-approved response workflows, endpoint isolation and notifications.
 
 #### 4. Supporting Active Directory Lab — DeleDFIR.local
-
 - **DC1 (Windows Server 2022) — `192.168.56.110`:** Domain Controller hosting Active Directory and DNS for `DeleDFIR.local`.
-- **WS01 (Windows 10) — `192.168.56.102`:** Domain-joined workstation used for domain authentication and access validation.
+- **WS01 (Windows 10) — `192.168.56.102`:** Domain-joined workstation used for authentication and access validation.
 - **Kali Linux:** Used for SMB authentication testing, Active Directory enumeration and Kerberoasting analysis.
 - **Investigation Scope:** Domain authentication, password-policy assessment, credential exposure and remediation, service-account security and authenticated remote access.
 
 #### 5. Local Automation and Notification Integrations
-
-- **n8n (Dockerized Web Interface):** Workflow automation tool running locally on `SPLUNK-SRV`, receiving Splunk alerts through a webhook and coordinating threat-intelligence enrichment and AI-assisted analysis.
-- **AbuseIPDB:** Threat-intelligence service used by n8n to enrich IP addresses associated with Splunk alerts.
-- **Gemini:** AI service used by n8n for AI-assisted alert analysis.
-- **Slack:** Receives notifications from both the n8n automation workflow and Tines SOAR workflows, including EDR detection and response-status notifications.
-- **Email:** Receives notifications from Tines SOAR workflows, including EDR detection and response updates.
+- **n8n:** Local workflow automation tool coordinating Splunk alert enrichment and AI-assisted analysis.
+- **AbuseIPDB:** Threat-intelligence service used to enrich IP indicators.
+- **Gemini:** AI service used for alert analysis.
+- **Slack:** Receives notifications from n8n and Tines workflows.
+- **Email:** Receives detection and response notifications from Tines.
 
 ---
 
 ### Telemetry & Signal Flow
 
-1. **Attacker Activity:** Kali Linux (`192.168.56.101`) generates controlled authentication-failure activity against `WS01` (`192.168.56.102`).
-2. **Authentication:** `WS01` processes the authentication attempts against the domain environment, generating Windows authentication events.
-3. **Log Ingestion:** The Splunk Universal Forwarder on `WS01` forwards Windows Security, System, Application and Sysmon Operational logs to Splunk Enterprise on `SPLUNK-SRV` over receiving port `9997`.
-4. **EDR Telemetry & Detection:** The LimaCharlie sensor on `DC1` sends endpoint telemetry to the cloud platform, where credential-access activity is detected.
-5. **SOAR Detection Forwarding:** LimaCharlie forwards detection events to Tines for SOAR workflow processing.
-6. **Analyst-Approved Response:** Tines requests analyst approval before initiating endpoint isolation through LimaCharlie.
-7. **Response Verification & Notifications:** LimaCharlie returns isolation status to Tines, which sends detection and response updates through Slack and email.
-8. **Splunk Alert Automation:** Splunk sends alert data to an n8n webhook hosted on `SPLUNK-SRV`.
-9. **Threat Intelligence Enrichment:** n8n sends relevant IP indicators to AbuseIPDB for threat-intelligence enrichment.
-10. **AI-Assisted Analysis:** n8n sends alert information for analysis by Gemini.
-11. **Automation Notifications:** n8n sends the enriched alert and AI-assisted analysis to Slack.
+1. **Traffic Generation:** Kali generates controlled authentication, scanning and proxy-test traffic against the lab targets.
+
+2. **Network Telemetry:** pfSense forwards firewall logs to Splunk over UDP `5514`; SQUID-SRV forwards HTTP/HTTPS access logs to `SPLUNK-SRV`. Suricata monitors network traffic for threats.
+
+3. **Host Telemetry:** WS01 forwards Windows Security, System, Application and Sysmon Operational logs to Splunk Enterprise on `SPLUNK-SRV` over port `9997`.
+
+4. **EDR Response:** DC1 endpoint telemetry flows to LimaCharlie; detections are forwarded to Tines, which obtains analyst approval, initiates isolation through LimaCharlie and receives response status for Slack and email notifications.
+
+5. **SIEM Alert Automation:** Splunk sends alerts to n8n, which submits relevant IP indicators to AbuseIPDB and alert information to Gemini, then sends enriched analysis to Slack.
